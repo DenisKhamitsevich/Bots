@@ -22,6 +22,7 @@ dependencies {
     implementation("io.github.wimdeblauwe:htmx-spring-boot:3.5.0")
     implementation("org.projectlombok:lombok:1.18.30")
     implementation("org.springframework.boot:spring-boot-starter-json:3.2.6")
+    implementation("org.springframework.boot:spring-boot-starter-websocket:3.3.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot app</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body onload="connect()">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="create-task-bot-id">Create task for bot with id:</label>
+                    <input type="text" id="create-task-bot-id" class="form-control" placeholder="Bot id here..."
+                           required>
+                </div>
+                <button id="create-task-for-bot-by-id-button" class="btn btn-default" type="submit">Create task</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="delete-bot-id">Destroy bot with id:</label>
+                    <input type="text" id="delete-bot-id" class="form-control" placeholder="Bot id here..." required>
+                </div>
+                <button id="delete-bot-button" class="btn btn-default" type="submit">Destroy</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="create-task-bot-type">Create task for any bot of type:</label>
+                    <select name="cars" id="create-task-bot-type">
+                        <option value="FAST">Fast</option>
+                        <option value="SLOW">Slow</option>
+                    </select>
+                </div>
+                <button id="create-task-for-bot-by-type-button" class="btn btn-default" type="submit">Create task
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Current bots</th>
+                </tr>
+                </thead>
+                <tbody id="bots">
+                </tbody>
+            </table>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Event log</th>
+                </tr>
+                </thead>
+                <tbody id="logs">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

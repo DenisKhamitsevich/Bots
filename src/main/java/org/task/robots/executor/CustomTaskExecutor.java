@@ -9,6 +9,7 @@ import org.task.robots.bot.AbstractBot;
 import org.task.robots.bot.BotFactory;
 import org.task.robots.dto.BotDto;
 import org.task.robots.enums.BotType;
+import org.task.robots.logger.EventLogger;
 import org.task.robots.mapper.BotMapper;
 import org.task.robots.task.AbstractTask;
 
@@ -33,6 +34,8 @@ public class CustomTaskExecutor {
      */
     private final static Map<Integer, AbstractBot> bots = new HashMap<>();
 
+    private final EventLogger eventLogger;
+
     @Value("${executor.thread-pool-default-size}")
     int threadCount;
     @Value("${executor.scheduler-task-queue-size}")
@@ -41,6 +44,10 @@ public class CustomTaskExecutor {
      * counter for thread id
      */
     private int threadIdCounter = 1;
+
+    public CustomTaskExecutor(EventLogger eventLogger) {
+        this.eventLogger = eventLogger;
+    }
 
 
     @PostConstruct
@@ -59,6 +66,7 @@ public class CustomTaskExecutor {
      */
     public void submit(AbstractTask task) {
         BlockingQueue<Runnable> requiredQueue;
+        eventLogger.log("Creating task ...");
         Integer threadId = task.getThreadId();
         requiredQueue = threadId != null ? individualTaskQueues.get(threadId) :
                 taskQueues.get(task.getBotType());
@@ -79,23 +87,25 @@ public class CustomTaskExecutor {
      * Creates bot of specified type
      */
     private AbstractBot createBot(BotType botType) {
-        System.out.println("Creating bot: " + botType);
+        eventLogger.log("Creating bot of type " + botType);
         BlockingQueue<Runnable> taskQueue = taskQueues.get(botType);
         AbstractBot thread = BotFactory.createBot(botType, taskQueue, botType.name() + "-" + threadIdCounter);
         individualTaskQueues.put(threadIdCounter, thread.getIndividualTaskQueue());
         bots.put(threadIdCounter, thread);
         thread.start();
         threadIdCounter++;
+        eventLogger.logListOfBots(getBots());
         return thread;
     }
 
     /**
      * Removes (interrupts) given thread adn removes it from task executor
      */
-    public static void removeThread(Thread thread, Integer threadId) {
+    public void removeThread(Thread thread, Integer threadId) {
         thread.interrupt();
         bots.remove(threadId);
         individualTaskQueues.remove(threadId);
+        eventLogger.logListOfBots(getBots());
     }
 
     public List<BotDto> getBots() {

@@ -25,22 +25,18 @@ public abstract class AbstractBot extends Thread {
 
     @Override
     public void run() {
-        try {
-            while (!isInterrupted()) {
-                Runnable task = null;
-                // Attempting to take a task from an individual queue
-                if (!individualTaskQueue.isEmpty()) {
-                    task = individualTaskQueue.take();
-                } else if (!taskQueue.isEmpty()) {
-                    // If the individual queue is empty, take from the general queue
-                    task = taskQueue.take();
-                }
-                if (task != null) {
-                    task.run();
-                }
+        while (!isInterrupted()) {
+            Runnable task = null;
+            // Attempting to take a task from an individual queue
+            if (!individualTaskQueue.isEmpty()) {
+                task = individualTaskQueue.poll();
+            } else if (!taskQueue.isEmpty()) {
+                // If the individual queue is empty, take from the general queue
+                task = taskQueue.poll();
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            if (task != null) {
+                task.run();
+            }
         }
     }
 
